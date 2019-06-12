@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html style="height: 100%; background-color: transparent">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>管理 | 点名系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./main.css">
+    <script>
+        const Store = require("electron-store")
+        const store = new Store
+        const {
+            dialog
+        } = require('electron').remote
+        // const Vue = require("vue") This Version of vue haven't got the tamplate, disabled.
+        // const vue = new Vue
+        var ipc = require('electron').ipcRenderer;
+        var stulist = [{
+                name: "欢迎，",
+                sticky: true
+            },
+            {
+                name: "感谢使用点名系统！",
+                id: 1,
+                sticky: false
+            }
+        ] //default config
+    </script>
+    <!-- <link href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet"> -->
+
+</head>
+
+<body class="white-on-small" style=" font-family: '思源黑体', 'PingFang SC', 'Segoe UI';height: 100%">
+    <div class="centwindow">
+        <ul class="collection with-header z-depth-0" style="padding: 0px 0px;">
+            <li class="collection-header teal white-text row z-depth-2 draggable" style="padding-top: 5px;margin-top: 0px;margin-bottom: 0;border-bottom: 0px
+                transparent;">
+                <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col">点名系统 Plus
+                    <span class="badge new" data-badge-caption="" style="margin-top: 0.85em">0.2.0</span>
+                </p>
+                <div class="right topbtn">
+                    <a class="white-text not-draggable modal-trigger" title="关于" href="#aboutModal">
+                        <i class="material-icons topbtn teal-hover color-transition">info</i>
+                    </a>
+                    <a class="white-text not-draggable modal-trigger" title="清空" href="#clrModal">
+                        <i class="material-icons topbtn delbtn color-transition">delete_sweep</i>
+                    </a>
+                    <a class="white-text not-draggable" onclick='ipc.send("window-min");return false;' title="最小化"
+                        href="#">
+                        <i class="material-icons topbtn color-transition teal-hover">remove</i>
+                    </a>
+                    <a class="white-text not-draggable" onclick='ipc.send("window-max");return false;' title="最大化"
+                        href="#">
+                        <i class="material-icons topbtn color-transition teal-hover">crop_square</i>
+                    </a>
+                    <a class="white-text not-draggable rounded " onclick='ipc.send("window-close");return false;'
+                        title="关闭" href="#">
+                        <i class="material-icons topbtn color-transition red-hover">clear</i>
+                    </a>
+                </div>
+                <!-- <button class="btn col s1 blue white-text z-depth-1 waves-light waves-effect topbtn"></button>
+                                <button class="btn col s1 red white-text z-depth-1 waves-light waves-effect topbtn"></button> -->
+            </li>
+            <li class="collection-item teal" style="padding-top:0px;padding-bottom: 1px;border-bottom: 0px transparent">
+                <div class="row white-text teal" style="margin-bottom: 0px">
+                    <div class="col s12 teal">
+                        <ul class="tabs teal">
+                            <li class="tab col s3 white-text"><a href="#manage" class="active white-text">管理</a></li>
+                            <li class="tab col s3 white-text"><a href="#select" class="white-text">点名</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <main>
+                <div id="manage">
+                    <li class="collection-item">
+                        <div class="row" style="margin-bottom: 0px;" id="addform">
+                            <input type="text" id="strin" class="validate col s10" placeholder="姓名学号，以 ' | ' 分隔"
+                                value="">
+                            <button type="button" class="btn col s2" style="height: 3rem;" id="addbtn"
+                                v-on:click="add">添加</button>
+                            </form>
+                        </div>
+
+                    <li class="collection-item hide"></li>
+                    <!-- Don't delete / comment this line, or the app will break XD -->
+
+                    <div id="stulist">
+                        <li class="collection-item" v-for="(student,index) in list">
+                            <div>{{ student.name }}
+                                <div class="right">
+                                    <span style="margin-right:5px; font-size: 18px">{{student.id}}</span>
+                                    <a class="secondary-content">
+                                        <i class="material-icons delbtn dred color-transition" v-if="!student.sticky"
+                                            v-on:click="del(index, true)">delete</i>
+                                        <i class="material-icons disabled" v-if="student.sticky">delete</i>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+                <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%">
+                    <div class="center-align teal" style="height: 100% !important;">
+                        <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple"
+                            style="width: 90%;margin-top: 10%;margin-bottom: 10%" v-on:click="shuffle">
+                            <p class="black-text" style="font-size: 75px;">{{text}}</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </ul>
+
+
+    </div>
+</body>
+<div id="clrModal" class="modal">
+    <div class="modal-content">
+        <h4>警告</h4>
+        <p>确认清空？此操作不可撤销！</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-red btn-flat red-text" onclick="clr()">清空</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">取消</a>
+    </div>
+</div>
+<div id="aboutModal" class="modal">
+    <div class="modal-content">
+        <h4>关于</h4>
+        <p>@地铁狂羊，2019</p>
+        <p>使用 Electron。</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">确定</a>
+    </div>
+</div>
+<!-- <script src="jquery-3.4.1.js"></script> Disabled due to unusable-->
+<script src="vue.js"></script>
+<script src="materialize.js"></script>
+<script>
+    function $(query) {//Fake Jquery :D
+        return document.querySelectorAll(query)
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.modal');
+        var instances = M.Modal.init(elems, {
+            dismissible: true
+        });
+    });
+    var tabInstance = M.Tabs.init($('.tabs'), {
+        swipeable: false
+    });
+    var addtext = document.getElementById('strin');
+    addtext.select();
+    var cur = -1
+
+    var listel = new Vue({
+        el: '#stulist',
+        data: {
+            list: stulist
+        },
+        methods: {
+            del: function (index, ifconfirm) {
+                var tempdel = stulist[index].name
+                var delres = true /* false */
+                // if (ifconfirm) {
+                //     delres = confirm("确定删除？")
+                // } else {
+                //     delres = true
+                // }
+                if (delres) {
+                    stulist.splice(index, 1);
+                    M.toast({
+                        html: "已删除 " + tempdel,
+                        classes: "red rounded white-text"
+                    })
+                }
+
+            }
+        }
+    })
+    var addsec = new Vue({
+        el: '#addform',
+        methods: {
+            add: function () {
+                var tempadd = {
+                    name: "",
+                    id: null,
+                    sticky: false
+                }
+                var tempstr = ""
+                tempstr = document.getElementById('strin').value
+                if (tempstr) {
+                    console.log("Adding w/ string: " + tempstr)
+                    var addArrTemp = tempstr.split('|')
+                    addArrTemp[0] = addArrTemp[0].trim()
+                    // addArrTemp[1] = addArrTemp[1].trim()
+                    var pass = true
+                    stulist.forEach(function (item, index) {
+                        if (item.name == addArrTemp[0] || (item.id == addArrTemp[1] && addArrTemp[
+                                1])) {
+                            pass = false;
+                        }
+                    });
+                    if (!pass) {
+                        M.toast({
+                            html: "此学生已经添加过",
+                            classes: 'yellow black-text'
+                        })
+                        console.log("Failed; Already There")
+
+                    }
+                    if (addArrTemp[0] && pass) {
+                        if (!isNaN(addArrTemp[0])) {
+                            M.toast({
+                                html: "姓名可不能是数字..."
+                            })
+                            return "Failed; Name is a number"
+                        } else {
+                            tempadd.name = addArrTemp[0]
+                            if (addArrTemp[1]) {
+                                addArrTemp[1] = addArrTemp[1].trim()
+                                tempid = parseInt(addArrTemp[1]);
+                                tempadd.id = tempid
+                            }
+                            stulist.push(tempadd)
+                            M.toast({
+                                html: '添加成功：' + tempadd.name,
+                                classes: 'green white-text'
+                            })
+                            document.getElementById('strin').clear
+                        }
+                    }
+                } else {
+                    console.log("Str NOT given: " + tempstr)
+                    M.toast({
+                        html: '请输入添加内容',
+                        classes: 'yellow black-text'
+                    })
+                }
+            }
+        }
+    })
+
+    function clr() {
+        console.log(stulist)
+        var stulistLen = stulist.length
+        for (let delPointer = stulistLen - 1; delPointer >= 0; delPointer--) {
+            const element = stulist[delPointer];
+            console.log("Deleting: #" + delPointer)
+            if (!element.sticky) {
+                stulist.splice(delPointer, 1)
+            }
+        }
+        M.Toast.dismissAll();
+        M.toast({
+            html: '清空完毕',
+            classes: 'red white-text'
+        })
+
+
+    }
+
+    function clrPrompt() {
+        M.toast({
+            html: '<span>确认清空？</span><button class="btn-flat toast-action red-text" onclick="clr()" id="clrconfirm">确认</button>',
+            displayLength: 10000
+        })
+    }
+    var randmodal = new Vue({
+        el: '#select',
+        data: {
+            text: "点击来开始点名"
+        },
+        methods: {
+            shuffle: function () {
+                if (stulist.length == 1) {
+                    randmodal.text = "请添加更多的学生"
+                } else {
+                    var randval = Math.floor(Math.random() * stulist.length)
+                    while (randval == cur) {
+                        randval = Math.floor(Math.random() * stulist.length)
+                    }
+                    cur = randval
+                    randmodal.text = stulist[randval].name
+                }
+            }
+        }
+    })
+    document.getElementsByClassName('indicator')[0].classList.add('white')
+</script>
+
+
+</html>

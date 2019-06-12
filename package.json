@@ -1,0 +1,20 @@
+{
+  "name": "student-selector",
+  "version": "0.2.0",
+  "description": "Student-Selector Electron Edition",
+  "main": "main.js",
+  "scripts": {
+    "it": "electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^5.0.1"
+  },
+  "dependencies": {
+    "electron-store": "^3.2.0",
+    "jquery": "^3.4.1",
+    "materialize-css": "^1.0.0-rc.2",
+    "vue": "^2.6.10"
+  }
+}

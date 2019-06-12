@@ -1,0 +1,71 @@
+
+@import "./materialize.css";
+
+@import "./maticon.css";
+
+.topbtn {
+    margin-top: 5px;
+    padding-left: 5px;
+    font-size: 28px !important;
+}
+
+.color-transition {
+    transition: color 0.5s !important;
+    transition: background-color 0.5s !important
+}
+
+.delbtn:hover {
+
+    color: #ff8800;
+}
+
+.delbtn.dred:hover {
+
+    color: #ff0000;
+}
+
+.selectbtn:hover {
+    color: rgb(0, 191, 255);
+}
+
+
+.centwindow {
+    width: 100%;
+    border: 0px transparent;
+    bottom: 0px;
+}
+
+.collection {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border: 0px transparent;
+    height: 100% !important;
+}
+
+.white-on-small {
+    background-color: white !important;
+}
+
+.container {
+    width: 100% !important;
+}
+
+.disabled{
+    color: #dddddd;
+}
+
+.draggable{
+    -webkit-app-region: drag
+}
+
+.not-draggable{
+    -webkit-app-region: no-drag
+}
+
+.red-hover:hover{
+    color: rgb(255, 103, 103)
+}
+
+.teal-hover:hover{
+    color: #72d4cb
+}

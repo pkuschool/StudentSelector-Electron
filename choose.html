@@ -1,0 +1,41 @@
+<!-- This file is already abandoned. -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>随机 | 点名系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./main.css">
+    <script>
+        function reloadp() {
+            history.go(0);
+        }
+        const Store = require("electron-store")
+        const store = new Store
+        const Vue = require("vue")
+        const vue = new Vue
+        const M = require("materialize")
+        const Jq = require("jquery")
+    </script>
+</head>
+
+<body class="blue" style=" font-family: '思源黑体', 'PingFang SC', 'Segoe UI';">
+    <div class="container  white-text center centered center-align">
+        <div class=" card-panel white black-text hoverable waves-effect waves-ripple"
+            style="margin-top: 20%;width: 100%" onclick="setTimeout(reloadp,350);">
+            <p class=" blue-grey-text" style="font-size: 75px;">Example</p>
+
+        </div>
+
+        <div onclick="history.back(-1)" class="btn blue darken-3 white-text waves-ripple waves-effect">
+            <i class="material-icons">home</i></div>
+    </div>
+</body>
+<script src="vue.js"></script>
+<script src="jquery-3.4.1.js"></script>
+<script src="materialize.js"></script>
+
+</html>
