@@ -95,8 +95,7 @@
                             </form>
                         </div>
 
-                    <li class="collection-item hide"></li>
-                    <!-- Don't delete / comment this line, or the app will break XD -->
+                    <li class="collection-item hide"></li><!-- Don't delete / comment this line, or the app will break XD -->
 
                     <div id="stulist">
                         <li class="collection-item" v-for="(student,index) in list" v-if="ref">
@@ -120,7 +119,7 @@
                             <p class="black-text" style="font-size: 75px;">{{text}}</p>
                             <p style="font-size: 25px">{{ id }}</p>
                         </div><br>
-                        <a class="btn" onclick="randmodal.text = '敬请期待';randmodal.id = null">复原</a>
+                        <a class="btn" v-on:click="revert">复原</a>
                     </div>
                 </div>
             </main>
@@ -177,12 +176,13 @@
             properties: ['openFile', "showHiddenFiles"]
         })
         try {
-            if(filepaths[0] != undefined && filepaths[0]){
+            if(filepaths != undefined && filepaths[0]){
                 fs.readFile(filepaths[0], (err, data) => {
                     console.log("Reading file: ")
                     console.log("error: " + err + ", data: " + data)
                     stulist = JSON.parse(data)
                     students.list = stulist.data
+                    randmodal.revert()
                 })
             }
         } catch (e) {
@@ -362,6 +362,10 @@
                     randmodal.text = stulist.data[randval].name
                     randmodal.id = stulist.data[randval].id
                 }
+            },
+            revert: function(){
+                this.text = '敬请期待';
+                this.id = null
             }
         }
     })
