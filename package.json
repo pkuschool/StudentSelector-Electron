@@ -12,6 +12,8 @@
     "electron": "^5.0.1"
   },
   "dependencies": {
-    "electron-store": "^3.2.0"
+    "electron-store": "^3.2.0",
+    "fs": "0.0.1-security",
+    "materialize-css": "^1.0.0"
   }
 }
