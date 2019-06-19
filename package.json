@@ -1,6 +1,6 @@
 {
   "name": "student-selector",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Student-Selector Electron Edition",
   "main": "main.js",
   "scripts": {
