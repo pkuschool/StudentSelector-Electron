@@ -118,8 +118,9 @@
                         <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple"
                             style="width: 90%;margin-top: 10%;margin-bottom: 10%" v-on:click="shuffle">
                             <p class="black-text" style="font-size: 75px;">{{text}}</p>
+                            <p style="font-size: 25px">{{ id }}</p>
                         </div><br>
-                        <a class="btn" onclick="randmodal.text = '敬请期待'">复原</a>
+                        <a class="btn" onclick="randmodal.text = '敬请期待';randmodal.id = null">复原</a>
                     </div>
                 </div>
             </main>
@@ -345,7 +346,8 @@
     var randmodal = new Vue({
         el: '#select',
         data: {
-            text: "点击来开始点名"
+            text: "点击来开始点名",
+            id: null
         },
         methods: {
             shuffle: function () {
@@ -358,6 +360,7 @@
                     }
                     cur = randval
                     randmodal.text = stulist.data[randval].name
+                    randmodal.id = stulist.data[randval].id
                 }
             }
         }
