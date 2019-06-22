@@ -21,17 +21,17 @@
         var stulist = {
             class: "未命名",
             data: [{
-                        name: "欢迎，",
-                        sticky: true
-                    },
-                    {
-                        name: "感谢使用点名系统！",
-                        id: 1,
-                        sticky: false
-                    }
-                ] //default config
+                    name: "欢迎，",
+                    id: 0,
+                    sticky: false
+                },
+                {
+                    name: "感谢使用点名系统！",
+                    id: 1,
+                    sticky: false
+                }
+            ] //default config
         }
-
     </script>
     <!-- <link href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet"> -->
 
@@ -95,7 +95,8 @@
                             </form>
                         </div>
 
-                    <li class="collection-item hide"></li><!-- Don't delete / comment this line, or the app will break XD -->
+                    <li class="collection-item hide"></li>
+                    <!-- Don't delete / comment this line, or the app will break XD -->
 
                     <div id="stulist" style="position: fixed;top: 183px;bottom: 0px;left: 0px;right: 0px;overflow:auto">
                         <li class="collection-item" v-for="(student,index) in list" v-if="ref">
@@ -115,11 +116,16 @@
                 <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%">
                     <div class="center-align teal" style="height: 100% !important;">
                         <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple"
-                            style="width: 90%;margin-top: 10%;margin-bottom: 10%" v-on:click="shuffle">
+                            style="width: 90%;margin-top: 10%;margin-bottom: 10%" v-on:click="dice" v-on:dblclick="dblclick">
                             <p class="black-text" style="font-size: 75px;">{{text}}</p>
                             <p style="font-size: 25px">{{ id }}</p>
                         </div><br>
                         <a class="btn" v-on:click="revert">复原</a>
+                        <p v-if="totalref > 0" class="white-text">选人中，剩余 {{ totalref }} 次</p>
+                        <p v-if="totalref > 10000 && totalref <= 50000" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
+                        <p v-if="totalref > 50000" class=" white-text">不要瞎玩啦</p>
+
+                        <p v-if="totalref <= 0" class=" white-text">准备就绪</p>
                     </div>
                 </div>
             </main>
@@ -176,7 +182,7 @@
             properties: ['openFile', "showHiddenFiles"]
         })
         try {
-            if(filepaths != undefined && filepaths[0]){
+            if (filepaths != undefined && filepaths[0]) {
                 fs.readFile(filepaths[0], (err, data) => {
                     console.log("Reading file: ")
                     console.log("error: " + err + ", data: " + data)
@@ -199,17 +205,19 @@
                 extensions: ['json']
             }],
             defaultPath: stulist.class + ".json"
-        }, (callback)=>{
-            if(callback != undefined && callback){
+        }, (callback) => {
+            if (callback != undefined && callback) {
                 let dir = callback.split(new RegExp(/\\/))
-                dir = dir[dir.length-1].split('.')
+                dir = dir[dir.length - 1].split('.')
                 stulist.class = dir[0]
-                console.log("Saving to: "+ callback)
-                fs.writeFile(callback, JSON.stringify(stulist), (err)=>{
-                    if(err){
+                console.log("Saving to: " + callback)
+                fs.writeFile(callback, JSON.stringify(stulist), (err) => {
+                    if (err) {
                         console.error(err)
-                    }else{
-                        M.toast({html: '保存成功'})
+                    } else {
+                        M.toast({
+                            html: '保存成功'
+                        })
                     }
                 })
             }
@@ -247,9 +255,9 @@
                 }
 
             },
-            upd: function (){
+            upd: function () {
                 this.ref = false
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     this.ref = true
                 })
             }
@@ -343,29 +351,84 @@
             displayLength: 10000
         })
     }
+
+    function sleep(callback, seconds) {
+        let waitLength = window.setTimeout(callback, seconds)
+    }
+    var temptimer = null
     var randmodal = new Vue({
         el: '#select',
         data: {
             text: "点击来开始点名",
-            id: null
+            id: null,
+            totalref: 0,
+            addLength: 0
         },
         methods: {
             shuffle: function () {
-                if (stulist.data.length == 1) {
-                    randmodal.text = "请添加更多的学生"
-                } else {
-                    var randval = Math.floor(Math.random() * stulist.data.length)
-                    while (randval == cur) {
-                        randval = Math.floor(Math.random() * stulist.data.length)
-                    }
-                    cur = randval
-                    randmodal.text = stulist.data[randval].name
-                    randmodal.id = stulist.data[randval].id
-                }
+
+
             },
-            revert: function(){
+            revert: function () {
+                this.totalref = 0
                 this.text = '敬请期待';
                 this.id = null
+            },
+            dice: function () {
+                if (stulist.data.length <= 1) {
+                    this.text = "请添加更多的学生"
+                } else {
+                    this.totalref += Math.floor(Math.random() * 200 + 350 + this.addLength)
+                    if(this.addLength <= 4000){
+                        this.addLength += 170
+                    }
+                    temptimer = window.setInterval(function () {
+                        if (randmodal.totalref > 0) {
+                            // console.log("Shuffle @ " + randmodal.totalref)
+                            if (stulist.data.length == 1) {
+                                randmodal.text = "请添加更多的学生"
+                            } else {
+                                var randval = Math.floor(Math.random() * stulist.data.length)
+                                while (randval == cur) {
+                                    randval = Math.floor(Math.random() * stulist.data.length)
+                                }
+                                cur = randval
+                                randmodal.text = stulist.data[randval].name
+                                randmodal.id = stulist.data[randval].id
+                            }
+                            randmodal.totalref -= 1
+                        } else {
+                            temptimer = window.clearInterval()
+                        }
+                    }, 1)
+                }
+
+            },
+            dblclick: function () {
+                if (stulist.data.length <= 1) {
+                    this.text = "请添加更多的学生"
+                } else {
+                    this.totalref += 8000
+                    temptimer = window.setInterval(function () {
+                        if (randmodal.totalref > 0) {
+                            // console.log("Shuffle @ " + randmodal.totalref)
+                            if (stulist.data.length == 1) {
+                                randmodal.text = "请添加更多的学生"
+                            } else {
+                                var randval = Math.floor(Math.random() * stulist.data.length)
+                                while (randval == cur) {
+                                    randval = Math.floor(Math.random() * stulist.data.length)
+                                }
+                                cur = randval
+                                randmodal.text = stulist.data[randval].name
+                                randmodal.id = stulist.data[randval].id
+                            }
+                            randmodal.totalref -= 1
+                        } else {
+                            temptimer = window.clearInterval()
+                        }
+                    }, 1)
+                }
             }
         }
     })
