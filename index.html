@@ -16,9 +16,9 @@
         } = require('electron').remote
         // const Vue = require("vue") This Version of vue haven't got the tamplate, disabled.
         // const vue = new Vue
-        var ipc = require('electron').ipcRenderer;
-        const fs = require('fs')
-        var stulist = {
+        var ipc = require('electron').ipcRenderer;// For Window Control purposes
+        const fs = require('fs') // Read JSON!
+        var stulist = {//Default Option; Introduction to new user
             class: "未命名",
             data: [{
                     name: "欢迎，",
@@ -73,7 +73,7 @@
                 </div>
                 <!-- <button class="btn col s1 blue white-text z-depth-1 waves-light waves-effect topbtn"></button>
                                 <button class="btn col s1 red white-text z-depth-1 waves-light waves-effect topbtn"></button> -->
-            </li>
+            </li><!-- Collection Header; Window title -->
             <li class="collection-item teal" style="padding-top:0px;padding-bottom: 1px;border-bottom: 0px transparent">
                 <div class="row white-text teal" style="margin-bottom: 0px">
                     <div class="col s12 teal">
@@ -83,8 +83,8 @@
                         </ul>
                     </div>
                 </div>
-            </li>
-            <main>
+            </li><!-- Collection item: Tabs -->
+            <main><!-- Main Content -->
                 <div id="manage">
                     <li class="collection-item">
                         <div class="row" style="margin-bottom: 0px;" id="addform">
@@ -98,6 +98,7 @@
                     <li class="collection-item hide"></li>
                     <!-- Don't delete / comment this line, or the app will break XD -->
 
+                    <!-- Student List. Rendered by Vue.js and is named 'students' -->
                     <div id="stulist" style="position: fixed;top: 183px;bottom: 0px;left: 0px;right: 0px;overflow:auto">
                         <li class="collection-item" v-for="(student,index) in list" v-if="ref">
                             <div>{{ student.name }}
@@ -113,7 +114,7 @@
                         </li>
                     </div>
                 </div>
-                <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%">
+                <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%"><!-- The Selector Tab -->
                     <div class="center-align teal" style="height: 100% !important;">
                         <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple"
                             style="width: 90%;margin-top: 10%;margin-bottom: 10%" v-on:click="dice" v-on:dblclick="dblclick">
@@ -122,8 +123,8 @@
                         </div><br>
                         <a class="btn" v-on:click="revert">复原</a>
                         <p v-if="totalref > 0" class="white-text">选人中，剩余 {{ totalref }} 次</p>
-                        <p v-if="totalref > 10000 && totalref <= 50000" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
-                        <p v-if="totalref > 50000" class=" white-text">不要瞎玩啦</p>
+                        <p v-if="totalref > 30000 && totalref <= 60000" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
+                        <p v-if="totalref > 60000" class=" white-text">不要瞎玩啦，如需要复原请按上方“复原”。</p>
 
                         <p v-if="totalref <= 0" class=" white-text">准备就绪</p>
                     </div>
@@ -158,10 +159,10 @@
 <script src="vue.js"></script>
 <script src="materialize.js"></script>
 <script>
-    function $(query) { //Fake Jquery :D
+    function $(query) { //Fake Jquery :D but not used often
         return document.querySelectorAll(query)
     }
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {//Modal Init
         var elems = document.querySelectorAll('.modal');
         var instances = M.Modal.init(elems, {
             dismissible: true
@@ -169,7 +170,7 @@
     });
     // const M = require('materialize-css')
 
-    // ! File OP
+    // ! File OP : Start
     var openFile = document.getElementById('openFile')
     var saveFile = document.getElementById('saveFile')
     openFile.addEventListener('click', () => {
@@ -222,25 +223,25 @@
                 })
             }
         })
-    })
+    })//File OP: End
 
     var tabInstance = M.Tabs.init($('.tabs'), {
         swipeable: false
-    });
+    });//Tabs Init
     var addtext = document.getElementById('strin');
-    addtext.select();
-    var cur = -1
+    addtext.select();//Select input textbox for default
+    var cur = -1 //Current Selected Student ID
 
-    var students = new Vue({
+    var students = new Vue({//Student List
         el: '#stulist',
         data: {
             list: stulist.data,
             ref: true
         },
         methods: {
-            del: function (index, ifconfirm) {
-                var tempdel = stulist.data[index].name
-                var delres = true /* false */
+            del: function (index, ifconfirm) {//Delete STUDENT w/ index
+                let tempdel = stulist.data[index].name
+                let delres = true /* false *///Disabled Del Protection
                 // if (ifconfirm) {
                 //     delres = confirm("确定删除？")
                 // } else {
@@ -255,7 +256,7 @@
                 }
 
             },
-            upd: function () {
+            upd: function () {//UNUSED
                 this.ref = false
                 this.$nextTick(() => {
                     this.ref = true
@@ -263,10 +264,10 @@
             }
         }
     })
-    var addsec = new Vue({
+    var addsec = new Vue({//ADD area
         el: '#addform',
         methods: {
-            add: function () {
+            add: function () {/* Violent Add Controls by directly looking in DOM */
                 var tempadd = {
                     name: "",
                     id: null,
@@ -326,7 +327,7 @@
         }
     })
 
-    function clr() {
+    function clr() {//Clear it
         console.log(stulist)
         var stulistLen = stulist.data.length
         for (let delPointer = stulistLen - 1; delPointer >= 0; delPointer--) {
@@ -345,18 +346,18 @@
 
     }
 
-    function clrPrompt() {
+    function clrPrompt() {//UNUSED
         M.toast({
             html: '<span>确认清空？</span><button class="btn-flat toast-action red-text" onclick="clr()" id="clrconfirm">确认</button>',
             displayLength: 10000
         })
     }
 
-    function sleep(callback, seconds) {
+    function sleep(callback, seconds) {//UNUSED
         let waitLength = window.setTimeout(callback, seconds)
     }
     var temptimer = null
-    var randmodal = new Vue({
+    var randmodal = new Vue({//Selection Tab Controller
         el: '#select',
         data: {
             text: "点击来开始点名",
@@ -365,7 +366,7 @@
             addLength: 0
         },
         methods: {
-            shuffle: function () {
+            shuffle: function () {//Previously Shuffles, but empty by now.
 
 
             },
@@ -404,7 +405,7 @@
                 }
 
             },
-            dblclick: function () {
+            dblclick: function () {//Easter Egg!
                 if (stulist.data.length <= 1) {
                     this.text = "请添加更多的学生"
                 } else {
@@ -432,7 +433,7 @@
             }
         }
     })
-    document.getElementsByClassName('indicator')[0].classList.add('white')
+    document.getElementsByClassName('indicator')[0].classList.add('white')//Paint the indicator
 </script>
 
 
