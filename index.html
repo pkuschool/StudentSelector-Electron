@@ -16,9 +16,9 @@
         } = require('electron').remote
         // const Vue = require("vue") This Version of vue haven't got the tamplate, disabled.
         // const vue = new Vue
-        var ipc = require('electron').ipcRenderer;// For Window Control purposes
+        var ipc = require('electron').ipcRenderer; // For Window Control purposes
         const fs = require('fs') // Read JSON!
-        var stulist = {//Default Option; Introduction to new user
+        var stulist = { //Default Option; Introduction to new user
             class: "未命名",
             data: [{
                     name: "欢迎，",
@@ -43,7 +43,7 @@
             <li class="collection-header teal white-text row z-depth-2 draggable" style="padding-top: 5px;margin-top: 0px;margin-bottom: 0;border-bottom: 0px
                 transparent;">
                 <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col">点名系统 Plus
-                    <span class="badge new" data-badge-caption="" style="margin-top: 0.85em">0.3.0</span>
+                    <span class="badge new" data-badge-caption="" style="margin-top: 0.85em">0.4.0</span>
                 </p>
                 <div class="right topbtn">
                     <a class="white-text not-draggable" title="打开" onclick="return true" id="openFile">
@@ -84,14 +84,15 @@
                     </div>
                 </div>
             </li><!-- Collection item: Tabs -->
-            <main><!-- Main Content -->
+            <main>
+                <!-- Main Content -->
                 <div id="manage">
                     <li class="collection-item">
                         <div class="row" style="margin-bottom: 0px;" id="addform">
                             <input type="text" id="strin" class="validate col s10" placeholder="姓名学号，以 ' | ' 分隔"
                                 value="">
                             <button type="button" class="btn col s2" style="height: 3rem;" id="addbtn"
-                                v-on:click="add">添加</button>
+                                v-on:click="addtrig">添加</button>
                             </form>
                         </div>
 
@@ -114,15 +115,20 @@
                         </li>
                     </div>
                 </div>
-                <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%"><!-- The Selector Tab -->
+                <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%">
+                    <!-- The Selector Tab -->
                     <div class="center-align teal" style="height: 100% !important;">
                         <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple"
-                            style="width: 90%;margin-top: 10%;margin-bottom: 10%" v-on:click="dice" v-on:dblclick="dblclick">
+                            style="width: 90%;margin-top: 10%;margin-bottom: 10%" v-on:click="dice"
+                            v-on:dblclick="dblclick">
                             <p class="black-text" style="font-size: 75px;">{{text}}</p>
                             <p style="font-size: 25px">{{ id }}</p>
                         </div><br>
                         <a class="btn" v-on:click="revert">复原</a>
-                        <p v-if="totalref > 0" class="white-text">选人中，剩余 {{ totalref }} 次</p>
+                        <div class="progress white" style="width: 15%;margin: 0 auto;margin-top: 1em">
+                            <div class="indeterminate black" v-show="totalref > 0"></div>
+                        </div>
+                        <p v-if="totalref > 0" class="white-text">{{ totalref }}/{{ originref }}</p>
                         <p v-if="totalref > 30000 && totalref <= 60000" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
                         <p v-if="totalref > 60000" class=" white-text">不要瞎玩啦，如需要复原请按上方“复原”。</p>
 
@@ -162,7 +168,7 @@
     function $(query) { //Fake Jquery :D but not used often
         return document.querySelectorAll(query)
     }
-    document.addEventListener('DOMContentLoaded', function () {//Modal Init
+    document.addEventListener('DOMContentLoaded', function () { //Modal Init
         var elems = document.querySelectorAll('.modal');
         var instances = M.Modal.init(elems, {
             dismissible: true
@@ -185,7 +191,7 @@
         try {
             if (filepaths != undefined && filepaths[0]) {
                 fs.readFile(filepaths[0], (err, data) => {
-                    console.log("Reading file: ")
+                    console.log("Reading file: " + filepaths[0])
                     console.log("error: " + err + ", data: " + data)
                     stulist = JSON.parse(data)
                     students.list = stulist.data
@@ -223,25 +229,25 @@
                 })
             }
         })
-    })//File OP: End
+    }) //File OP: End
 
     var tabInstance = M.Tabs.init($('.tabs'), {
         swipeable: false
-    });//Tabs Init
+    }); //Tabs Init
     var addtext = document.getElementById('strin');
-    addtext.select();//Select input textbox for default
+    addtext.select(); //Select input textbox for default
     var cur = -1 //Current Selected Student ID
 
-    var students = new Vue({//Student List
+    var students = new Vue({ //Student List
         el: '#stulist',
         data: {
             list: stulist.data,
             ref: true
         },
         methods: {
-            del: function (index, ifconfirm) {//Delete STUDENT w/ index
+            del: function (index, ifconfirm) { //Delete STUDENT w/ index
                 let tempdel = stulist.data[index].name
-                let delres = true /* false *///Disabled Del Protection
+                let delres = true /* false */ //Disabled Del Protection
                 // if (ifconfirm) {
                 //     delres = confirm("确定删除？")
                 // } else {
@@ -256,7 +262,7 @@
                 }
 
             },
-            upd: function () {//UNUSED
+            upd: function () { //UNUSED
                 this.ref = false
                 this.$nextTick(() => {
                     this.ref = true
@@ -264,58 +270,66 @@
             }
         }
     })
-    var addsec = new Vue({//ADD area
+    var addsec = new Vue({ //ADD area
         el: '#addform',
         methods: {
-            add: function () {/* Violent Add Controls by directly looking in DOM */
-                var tempadd = {
-                    name: "",
-                    id: null,
-                    sticky: false
-                }
+            addtrig: function () {
+                this.add(document.getElementById('strin').value)
+            },
+            add: function (addstr) {
+                /* Violent Add Controls by directly looking in DOM */
                 var tempstr = ""
-                tempstr = document.getElementById('strin').value
+                tempstr = addstr
                 if (tempstr) {
                     console.log("Adding w/ string: " + tempstr)
-                    var addArrTemp = tempstr.split('|')
-                    addArrTemp[0] = addArrTemp[0].trim()
-                    // addArrTemp[1] = addArrTemp[1].trim()
-                    var pass = true
-                    stulist.data.forEach(function (item, index) {
-                        if (item.name == addArrTemp[0] || (item.id == addArrTemp[1] && addArrTemp[
-                                1])) {
-                            pass = false;
-                        }
-                    });
-                    if (!pass) {
-                        M.toast({
-                            html: "此学生已经添加过",
-                            classes: 'yellow black-text'
-                        })
-                        console.log("Failed; Already There")
 
-                    }
-                    if (addArrTemp[0] && pass) {
-                        if (!isNaN(addArrTemp[0])) {
-                            M.toast({
-                                html: "姓名可不能是数字..."
-                            })
-                            return "Failed; Name is a number"
-                        } else {
-                            tempadd.name = addArrTemp[0]
-                            if (addArrTemp[1]) {
-                                addArrTemp[1] = addArrTemp[1].trim()
-                                tempid = parseInt(addArrTemp[1]);
-                                tempadd.id = tempid
-                            }
-                            stulist.data.push(tempadd)
-                            M.toast({
-                                html: '添加成功：' + tempadd.name,
-                                classes: 'green white-text'
-                            })
-                            document.getElementById('strin').value = ""
+                    var addarray = tempstr.split('&')
+                    addarray.forEach(function (item, index) {
+                        var tempadd = {
+                            name: "",
+                            id: null,
+                            sticky: false
                         }
-                    }
+                        var addArrTemp = item.split('|')
+                        addArrTemp[0] = addArrTemp[0].trim()
+                        // addArrTemp[1] = addArrTemp[1].trim()
+                        var pass = true
+                        stulist.data.forEach(function (item, index) {
+                            if (item.name == addArrTemp[0] || (item.id == addArrTemp[1] &&
+                                    addArrTemp[1])) {
+                                pass = false;
+                            }
+                        });
+                        if (!pass) {
+                            M.toast({
+                                html: "此学生已经添加过",
+                                classes: 'yellow black-text'
+                            })
+                            console.log("Failed; Already There")
+
+                        }
+                        if (addArrTemp[0] && pass) {
+                            if (!isNaN(addArrTemp[0])) {
+                                M.toast({
+                                    html: "姓名不能是数字"
+                                })
+                                return "Failed; Name is a number"
+                            } else {
+                                tempadd.name = addArrTemp[0]
+                                if (addArrTemp[1]) {
+                                    addArrTemp[1] = addArrTemp[1].trim()
+                                    tempid = parseInt(addArrTemp[1]);
+                                    tempadd.id = tempid
+                                }
+                                stulist.data.push(tempadd)
+                                M.toast({
+                                    html: '添加成功：' + tempadd.name,
+                                    classes: 'green white-text'
+                                })
+                                document.getElementById('strin').value = ""
+                            }
+                        }
+                    })
                 } else {
                     console.log("Str NOT given: " + tempstr)
                     M.toast({
@@ -327,7 +341,7 @@
         }
     })
 
-    function clr() {//Clear it
+    function clr() { //Clear it
         console.log(stulist)
         var stulistLen = stulist.data.length
         for (let delPointer = stulistLen - 1; delPointer >= 0; delPointer--) {
@@ -346,28 +360,47 @@
 
     }
 
-    function clrPrompt() {//UNUSED
+    function clrPrompt() { //UNUSED
         M.toast({
             html: '<span>确认清空？</span><button class="btn-flat toast-action red-text" onclick="clr()" id="clrconfirm">确认</button>',
             displayLength: 10000
         })
     }
 
-    function sleep(callback, seconds) {//UNUSED
+    function sleep(callback, seconds) { //UNUSED
         let waitLength = window.setTimeout(callback, seconds)
     }
     var temptimer = null
-    var randmodal = new Vue({//Selection Tab Controller
+    var randmodal = new Vue({ //Selection Tab Controller
         el: '#select',
         data: {
             text: "点击来开始点名",
             id: null,
             totalref: 0,
-            addLength: 0
+            addLength: 0,
+            originref: 0
         },
         methods: {
-            shuffle: function () {//Previously Shuffles, but empty by now.
-
+            shuffle: function () { //Previously Shuffles, but empty by now.
+                temptimer = window.setInterval(function () {
+                    if (randmodal.totalref > 0) {
+                        // console.log("Shuffle @ " + randmodal.totalref)
+                        if (stulist.data.length == 1) {
+                            randmodal.text = "请添加更多的学生"
+                        } else {
+                            var randval = Math.floor(Math.random() * stulist.data.length)
+                            while (randval == cur) {
+                                randval = Math.floor(Math.random() * stulist.data.length)
+                            }
+                            cur = randval
+                            randmodal.text = stulist.data[randval].name
+                            randmodal.id = stulist.data[randval].id
+                        }
+                        randmodal.totalref -= 1
+                    } else {
+                        temptimer = window.clearInterval()
+                    }
+                }, 1)
 
             },
             revert: function () {
@@ -380,60 +413,26 @@
                     this.text = "请添加更多的学生"
                 } else {
                     this.totalref += Math.floor(Math.random() * 200 + 350 + this.addLength)
-                    if(this.addLength <= 4000){
+                    if (this.addLength <= 4000) {
                         this.addLength += 170
                     }
-                    temptimer = window.setInterval(function () {
-                        if (randmodal.totalref > 0) {
-                            // console.log("Shuffle @ " + randmodal.totalref)
-                            if (stulist.data.length == 1) {
-                                randmodal.text = "请添加更多的学生"
-                            } else {
-                                var randval = Math.floor(Math.random() * stulist.data.length)
-                                while (randval == cur) {
-                                    randval = Math.floor(Math.random() * stulist.data.length)
-                                }
-                                cur = randval
-                                randmodal.text = stulist.data[randval].name
-                                randmodal.id = stulist.data[randval].id
-                            }
-                            randmodal.totalref -= 1
-                        } else {
-                            temptimer = window.clearInterval()
-                        }
-                    }, 1)
+                    this.originref = this.totalref
+                    this.shuffle()
                 }
 
             },
-            dblclick: function () {//Easter Egg!
+            dblclick: function () { //Easter Egg!
                 if (stulist.data.length <= 1) {
                     this.text = "请添加更多的学生"
                 } else {
                     this.totalref += 8000
-                    temptimer = window.setInterval(function () {
-                        if (randmodal.totalref > 0) {
-                            // console.log("Shuffle @ " + randmodal.totalref)
-                            if (stulist.data.length == 1) {
-                                randmodal.text = "请添加更多的学生"
-                            } else {
-                                var randval = Math.floor(Math.random() * stulist.data.length)
-                                while (randval == cur) {
-                                    randval = Math.floor(Math.random() * stulist.data.length)
-                                }
-                                cur = randval
-                                randmodal.text = stulist.data[randval].name
-                                randmodal.id = stulist.data[randval].id
-                            }
-                            randmodal.totalref -= 1
-                        } else {
-                            temptimer = window.clearInterval()
-                        }
-                    }, 1)
+                    this.originref = this.totalref
+                    this.shuffle()
                 }
             }
         }
     })
-    document.getElementsByClassName('indicator')[0].classList.add('white')//Paint the indicator
+    document.getElementsByClassName('indicator')[0].classList.add('white') //Paint the indicator
 </script>
 
 
