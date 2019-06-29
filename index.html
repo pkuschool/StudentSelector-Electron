@@ -124,11 +124,11 @@
                             <p class="black-text" style="font-size: 75px;">{{text}}</p>
                             <p style="font-size: 25px">{{ id }}</p>
                         </div><br>
-                        <a class="btn" v-on:click="revert">复原</a>
+                        <a class="btn white black-text" v-on:click="revert">复原</a>
                         <div class="progress white" style="width: 15%;margin: 0 auto;margin-top: 1em">
                             <div class="indeterminate black" v-show="totalref > 0"></div>
                         </div>
-                        <p v-if="totalref > 0" class="white-text">{{ totalref }}/{{ originref }}</p>
+                        <p v-if="totalref > 0" class="white-text">{{ 100-Math.floor(totalref/originref*100) }}%</p>
                         <p v-if="totalref > 30000 && totalref <= 60000" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
                         <p v-if="totalref > 60000" class=" white-text">不要瞎玩啦，如需要复原请按上方“复原”。</p>
 
@@ -192,10 +192,18 @@
             if (filepaths != undefined && filepaths[0]) {
                 fs.readFile(filepaths[0], (err, data) => {
                     console.log("Reading file: " + filepaths[0])
-                    console.log("error: " + err + ", data: " + data)
-                    stulist = JSON.parse(data)
-                    students.list = stulist.data
-                    randmodal.revert()
+                    if (err) {
+                        console.error(err)
+                    } else {
+                        console.log("error: " + err + ", data: " + data)
+                        stulist = JSON.parse(data)
+                        students.list = stulist.data
+                        randmodal.revert()
+                        M.toast({
+                            html: '打开成功'
+                        })
+
+                    }
                 })
             }
         } catch (e) {
@@ -358,13 +366,6 @@
         })
 
 
-    }
-
-    function clrPrompt() { //UNUSED
-        M.toast({
-            html: '<span>确认清空？</span><button class="btn-flat toast-action red-text" onclick="clr()" id="clrconfirm">确认</button>',
-            displayLength: 10000
-        })
     }
 
     function sleep(callback, seconds) { //UNUSED
