@@ -125,6 +125,7 @@
                             <p style="font-size: 25px">{{ id }}</p>
                         </div><br>
                         <a class="btn white black-text" v-on:click="revert">复原</a>
+                        <a class="btn white red-text" v-if="totalref > 0" v-on:click="stop">停止</a>
                         <div class="progress white" style="width: 15%;margin: 0 auto;margin-top: 1em">
                             <div class="indeterminate black" v-show="totalref > 0"></div>
                         </div>
@@ -408,6 +409,9 @@
                 this.totalref = 0
                 this.text = '敬请期待';
                 this.id = null
+            },
+            stop: function(){
+                this.totalref=0
             },
             dice: function () {
                 if (stulist.data.length <= 1) {
