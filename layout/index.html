@@ -131,14 +131,16 @@
                             <p class="black-text" style="font-size: 75px;">{{text}}</p>
                             <p style="font-size: 25px">{{ id }}</p>
                         </div><br>
+                        <a class="btn white black-text" v-on:click="inf" v-if="totalref == 0">保持</a>
                         <a class="btn white black-text" v-on:click="revert">复原</a>
                         <a class="btn white red-text" v-if="totalref > 0" v-on:click="stop">停止</a>
                         <div class="progress white" style="width: 15%;margin: 0 auto;margin-top: 1em">
                             <div class="indeterminate black" v-show="totalref > 0"></div>
                         </div>
-                        <p v-if="totalref > 0" class="white-text">{{ 100-Math.floor(totalref/originref*100) }}%</p>
-                        <p v-if="totalref > 30000 && totalref <= 60000" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
-                        <p v-if="totalref > 60000" class=" white-text">不要瞎玩啦，如需要复原请按上方“复原”。</p>
+                        <p v-if="totalref > 0 && totalref != Infinity" class="white-text">{{ 100-Math.floor(totalref/originref*100) }}%</p>
+                        <p v-if="totalref == Infinity" class="white-text">正在保持中，按“复原”以取消，“停止”以立刻选择</p>
+                        <p v-if="totalref > 30000 && totalref <= 60000 && totalref != Infinity" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
+                        <p v-if="totalref > 60000 && totalref != Infinity" class=" white-text">不要瞎玩啦，如需要复原请按上方“复原”。</p>
 
                         <p v-if="totalref <= 0" class=" white-text">准备就绪</p>
                     </div>
@@ -400,7 +402,7 @@
             originref: 0
         },
         methods: {
-            shuffle: function () { //Previously Shuffles, but empty by now.
+            shuffle: function () {
                 temptimer = window.setInterval(function () {
                     if (randmodal.totalref > 0) {
                         // console.log("Shuffle @ " + randmodal.totalref)
@@ -451,6 +453,10 @@
                     this.originref = this.totalref
                     this.shuffle()
                 }
+            },
+            inf: function(){
+                this.totalref = Infinity
+                this.shuffle()
             }
         }
     })
