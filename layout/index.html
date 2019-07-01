@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>管理 | 点名系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./css/main.css">
     <script>
         const Store = require("electron-store")
         const store = new Store
@@ -32,6 +32,8 @@
                 }
             ] //default config
         }
+        const nodeVersion = process.version
+
     </script>
     <!-- <link href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet"> -->
 
@@ -163,8 +165,8 @@
     </div>
 </div>
 <!-- <script src="jquery-3.4.1.js"></script> Disabled due to unusable-->
-<script src="vue.js"></script>
-<script src="materialize.js"></script>
+<script src="./js/vue.js"></script>
+<script src="./js/materialize.js"></script>
 <script>
     function $(query) { //Fake Jquery :D but not used often
         return document.querySelectorAll(query)

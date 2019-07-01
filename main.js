@@ -23,16 +23,16 @@ function createWindow() {
       nodeIntegration: true
     },
     center: true,
-    icon: './favicon.ico',
+    icon: './layout/attr/favicon.ico',
     acceptFirstMouse:true,
     backgroundColor: '#00FFFFFF'
   })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
-  globalShortcut.register("Shift+Alt+Ctrl+R", function () {
-    mainWindow.loadFile('index.html')
-  })
+  mainWindow.loadFile('./layout/index.html')
+  // globalShortcut.register("Shift+Alt+Ctrl+R", function () {
+  //   mainWindow.loadFile('index.html')
+  // })
   const ipc = electron.ipcMain
   //登录窗口最小化
   ipc.on('window-min', function () {
