@@ -1,1 +1,14 @@
-{"class":"default","data":[{"name":"欢迎，","sticky":true},{"name":"感谢使用点名系统！","id":1,"sticky":false}]}
+{
+    "class": "未命名班级",
+    "data": [{
+            "name": "欢迎，",
+            "id": 0,
+            "sticky": false
+        },
+        {
+            "name": "感谢使用点名系统！",
+            "id": 1,
+            "sticky": false
+        }
+    ]
+}
