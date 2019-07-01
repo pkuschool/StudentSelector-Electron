@@ -19,7 +19,7 @@
         var ipc = require('electron').ipcRenderer; // For Window Control purposes
         const fs = require('fs') // Read JSON!
         var stulist = { //Default Option; Introduction to new user
-            class: "未命名",
+            class: "未命名班级",
             data: [{
                     name: "欢迎，",
                     id: 0,
@@ -49,7 +49,7 @@
         <ul class="collection with-header z-depth-0" style="padding: 0px 0px;">
             <li class="collection-header teal white-text row z-depth-2 draggable" style="padding-top: 5px;margin-top: 0px;margin-bottom: 0;border-bottom: 0px
                 transparent;">
-                <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col">点名系统 Plus
+                <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col" id="appTitle">点名系统 Plus ({{className}})
                     <span class="badge new" data-badge-caption="" style="margin-top: 0.85em"><script>document.write(appVersion)</script></span>
                 </p>
                 <div class="right topbtn">
@@ -218,6 +218,7 @@
                         console.log("error: " + err + ", data: " + data)
                         stulist = JSON.parse(data)
                         students.list = stulist.data
+                        appTitle.className = stulist.class
                         randmodal.revert()
                         M.toast({
                             html: '打开成功'
@@ -266,6 +267,12 @@
     addtext.select(); //Select input textbox for default
     var cur = -1 //Current Selected Student ID
 
+    var appTitle = new Vue({
+        el: '#appTitle',
+        data: {
+            className: stulist.class
+        }
+    })
     var students = new Vue({ //Student List
         el: '#stulist',
         data: {
