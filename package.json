@@ -6,7 +6,7 @@
   "scripts": {
     "it": "electron ."
   },
-  "author": "",
+  "author": "Smallg0at",
   "license": "MIT",
   "devDependencies": {
     "electron": "^5.0.1"

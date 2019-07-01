@@ -32,7 +32,12 @@
                 }
             ] //default config
         }
-        const nodeVersion = process.version
+        const nodeVersion = process.versions.node
+        const engineVersion = process.version.v8
+        const chromeVersion = process.versions.chrome
+        const electronVersion = process.versions.electron
+        const appVersion = '0.4.0'
+
 
     </script>
     <!-- <link href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet"> -->
@@ -45,7 +50,7 @@
             <li class="collection-header teal white-text row z-depth-2 draggable" style="padding-top: 5px;margin-top: 0px;margin-bottom: 0;border-bottom: 0px
                 transparent;">
                 <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col">点名系统 Plus
-                    <span class="badge new" data-badge-caption="" style="margin-top: 0.85em">0.4.0</span>
+                    <span class="badge new" data-badge-caption="" style="margin-top: 0.85em"><script>document.write(appVersion)</script></span>
                 </p>
                 <div class="right topbtn">
                     <a class="white-text not-draggable" title="打开" onclick="return true" id="openFile">
@@ -156,9 +161,19 @@
 </div>
 <div id="aboutModal" class="modal">
     <div class="modal-content">
-        <h4>关于</h4>
+        <h4>关于 点名系统Plus</h4>
         <p>@地铁狂羊，2019</p>
-        <p>使用 Electron。</p>
+        <a href="https://github.com/pkuschool/StudentSelector-Electron" class="btn-small">GitHub</a>
+        <a href="https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE" class="btn-small">许可</a>
+
+        <div class="divider" style="margin-top: 10px !important"></div>
+        <p>版本：<script>document.write(appVersion)</script></p>
+        <p>Electron: <script>document.write(electronVersion)</script></p>
+        <p>Node.js: <script>document.write(nodeVersion)</script></p>
+        <p>Chrome: <script>document.write(chromeVersion)</script></p>
+        <p>V8: <script>document.write(engineVersion)</script></p>
+        <p>Vue: 2.6.10</p>
+        <p>Materialize: 1.0.0</p>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">确定</a>
