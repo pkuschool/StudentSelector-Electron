@@ -173,11 +173,11 @@
         <h4>设置</h4>
         <h5>点名时长</h5>
         <p>值越大，点名时间越长。</p>
-        <form action="#">
-            <p class="range-field">
-                <input type="range" id="lenSlider" min="0.5" max="2.0" step="0.05" />
-            </p>
-        </form>
+        <p>目前值：{{ len }}&nbsp;&nbsp;
+            <a class="btn-small" v-on:click="lenShift(0.1)">+</a>
+            <a class="btn-small" v-on:click="lenShift(-0.1)">-</a>
+        </p>
+        <div class="divider" style="margin-top: 10px !important"></div>
         <h4>关于 点名系统Plus</h4>
         <p>@地铁狂羊，2019</p>
         <a href="https://github.com/pkuschool/StudentSelector-Electron" class="btn-small">GitHub</a>
@@ -318,7 +318,30 @@
             className: stulist.class
         }
     })
-    var students = new Vue({ //Student List
+
+
+    var aboutModal = new Vue({
+        el: '#aboutModal',
+        data: {
+            len: parseFloat(1.0)
+        },
+        methods: {
+            lenShift: function (elevation) {
+                if(parseFloat(this.len) + parseFloat(elevation) >= 0.3 && parseFloat(this.len) + parseFloat(elevation) <= 3){
+                    this.len = (parseFloat(this.len) + parseFloat(elevation)).toFixed(1)
+                    store.set('lenMutiplier', this.len)
+                }
+            }
+        }
+    })
+    if (store.has('lenMutiplier')) {
+        aboutModal.len = store.get('lenMutiplier')
+    } else {
+        store.set('lenMutiplier', 1.0)
+        aboutModal.len = 1.0
+    }
+
+    var students = new Vue({ //func: Student List
         el: '#stulist',
         data: {
             list: stulist.data,
@@ -488,7 +511,7 @@
                 if (stulist.data.length <= 1) {
                     this.text = "请添加更多的学生"
                 } else {
-                    this.totalref += Math.floor(Math.random() * 200 + 350 + this.addLength)
+                    this.totalref += Math.floor(aboutModal.len * (Math.random() * 200 + 350 + this.addLength))
                     if (this.addLength <= 4000) {
                         this.addLength += 170
                     }
@@ -501,7 +524,7 @@
                 if (stulist.data.length <= 1) {
                     this.text = "请添加更多的学生"
                 } else {
-                    this.totalref += 8000
+                    this.totalref += 8000 * aboutModal.len
                     this.originref = this.totalref
                     this.shuffle()
                 }
