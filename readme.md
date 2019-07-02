@@ -4,6 +4,8 @@
 
 使用 node.js + Electron 构建的应用。UI基于原来的[StudentSelector](https://github.com/pkuschool/StudentSelector)
 
+[>前往下载<](https://github.com/pkuschool/StudentSelector-Electron/releases)
+
 ## 功能
 
 点名，点名，点名！
