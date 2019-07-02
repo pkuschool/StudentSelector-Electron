@@ -11,7 +11,7 @@
   "author": "Smallg0at",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.6",
+    "electron": "^5.0.1",
     "electron-builder": "^20.44.4"
   },
   "dependencies": {
@@ -30,7 +30,7 @@
       "oneClick": true,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": false,
-      "installerHeaderIcon": "./build/icons/win.ico",
+      "installerHeaderIcon": "./asset/win.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "点名系统"
@@ -51,13 +51,13 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/macos.icns"
+      "icon": "asset/macos.icns"
     },
     "win": {
-      "icon": "build/icons/win.ico",
+      "icon": "asset/win.ico",
       "target": [
         {
-          "target": ["nsis", "zip"],
+          "target": "nsis",
           "arch": [
             "x64"
           ]
@@ -65,8 +65,7 @@
       ]
     },
     "linux": {
-      "icon": "build/icons/StudentSelector.png",
-      "target": ["deb", "zip"]
+      "icon": "asset/StudentSelector.png"
     }
   }
 }
