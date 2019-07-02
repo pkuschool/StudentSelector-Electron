@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="./css/main.css">
     <script>
         const Store = require("electron-store")
-        const store = new Store
+        const store = new Store()
         const {
             dialog
         } = require('electron').remote
-        // const Vue = require("vue") This Version of vue haven't got the tamplate, disabled.
+        const xlsx = require('node-xlsx')
+        // const Vue = require("vue") unused: This Version of vue haven't got the tamplate, disabled.
         // const vue = new Vue
         var ipc = require('electron').ipcRenderer; // For Window Control purposes
         const fs = require('fs') // Read JSON!
@@ -32,13 +33,12 @@
                 }
             ] //default config
         }
+        //func: vercode detect
         const nodeVersion = process.versions.node
         const engineVersion = process.version.v8
         const chromeVersion = process.versions.chrome
         const electronVersion = process.versions.electron
         const appVersion = '0.4.0'
-
-
     </script>
     <!-- <link href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet"> -->
 
@@ -49,7 +49,8 @@
         <ul class="collection with-header z-depth-0" style="padding: 0px 0px;">
             <li class="collection-header teal white-text row z-depth-2 draggable" style="padding-top: 5px;margin-top: 0px;margin-bottom: 0;border-bottom: 0px
                 transparent;">
-                <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col" id="appTitle">点名系统 Plus ({{className}})</p>
+                <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col"
+                    id="appTitle">点名系统 Plus ({{className}})</p>
                 <div class="right topbtn">
                     <a class="white-text not-draggable tooltipped" title="打开" onclick="return true" id="openFile"
                         data-position="bottom" data-tooltip="打开">
@@ -64,8 +65,7 @@
                         <i class="material-icons topbtn teal-hover color-transition">info</i>
                     </a>
                     <a class="white-text not-draggable modal-trigger tooltipped" title="清空" href="#clrModal"
-                        data-position="bottom"
-                        data-tooltip="清空">
+                        data-position="bottom" data-tooltip="清空">
                         <i class="material-icons topbtn delbtn color-transition">delete_sweep</i>
                     </a>
                     <a class="white-text not-draggable" onclick='ipc.send("window-min");return false;' title="最小化"
@@ -107,9 +107,9 @@
                         </div>
 
                     <li class="collection-item hide"></li>
-                    <!-- Don't delete / comment this line, or the app will break XD -->
+                    <!--unexp: Don't delete / comment this line, or the app will break XD -->
 
-                    <!-- Student List. Rendered by Vue.js and is named 'students' -->
+                    <!-- func: Student List. Rendered by Vue.js and is named 'students' -->
                     <div id="stulist" style="position: fixed;top: 183px;bottom: 0px;left: 0px;right: 0px;overflow:auto">
                         <li class="collection-item" v-for="(student,index) in list" v-if="ref">
                             <div>{{ student.name }}
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%;overflow: auto">
-                    <!-- The Selector Tab -->
+                    <!-- func: The Selector Tab -->
                     <div class="center-align teal" style="height: 100% !important;">
                         <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple"
                             style="width: 85%;margin-top: 5%;margin-bottom: 5%" v-on:click="dice"
@@ -140,9 +140,11 @@
                         <div class="progress white" style="width: 15%;margin: 0 auto;margin-top: 1em">
                             <div class="indeterminate black" v-show="totalref > 0"></div>
                         </div>
-                        <p v-if="totalref > 0 && totalref != Infinity" class="white-text">{{ 100-Math.floor(totalref/originref*100) }}%</p>
+                        <p v-if="totalref > 0 && totalref != Infinity" class="white-text">
+                            {{ 100-Math.floor(totalref/originref*100) }}%</p>
                         <p v-if="totalref == Infinity" class="white-text">正在保持中，按“复原”以取消，“停止”以立刻选择</p>
-                        <p v-if="totalref > 30000 && totalref <= 60000 && totalref != Infinity" class=" white-text">可能会花费较长时间，如需要取消请按上方“复原”。</p>
+                        <p v-if="totalref > 30000 && totalref <= 60000 && totalref != Infinity" class=" white-text">
+                            可能会花费较长时间，如需要取消请按上方“复原”。</p>
                         <p v-if="totalref > 60000 && totalref != Infinity" class=" white-text">不要瞎玩啦，如需要复原请按上方“复原”。</p>
 
                         <p v-if="totalref <= 0" class=" white-text">准备就绪</p>
@@ -155,6 +157,7 @@
     </div>
 </body>
 <div id="clrModal" class="modal">
+    <!--func: clrmodal-->
     <div class="modal-content">
         <h4>警告</h4>
         <p>确认清空？此操作不可撤销！</p>
@@ -165,18 +168,42 @@
     </div>
 </div>
 <div id="aboutModal" class="modal">
+    <!-- Func: aboutModal -->
     <div class="modal-content">
+        <h4>设置</h4>
+        <h5>点名时长</h5>
+        <p>值越大，点名时间越长。</p>
+        <form action="#">
+            <p class="range-field">
+                <input type="range" id="lenSlider" min="0.5" max="2.0" step="0.05" />
+            </p>
+        </form>
         <h4>关于 点名系统Plus</h4>
         <p>@地铁狂羊，2019</p>
         <a href="https://github.com/pkuschool/StudentSelector-Electron" class="btn-small">GitHub</a>
         <a href="https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE" class="btn-small">许可</a>
 
         <div class="divider" style="margin-top: 10px !important"></div>
-        <p>版本：<script>document.write(appVersion)</script></p>
-        <p>Electron: <script>document.write(electronVersion)</script></p>
-        <p>Node.js: <script>document.write(nodeVersion)</script></p>
-        <p>Chrome: <script>document.write(chromeVersion)</script></p>
-        <p>V8: <script>document.write(engineVersion)</script></p>
+        <p>版本：<script>
+                document.write(appVersion)
+            </script>
+        </p>
+        <p>Electron: <script>
+                document.write(electronVersion)
+            </script>
+        </p>
+        <p>Node.js: <script>
+                document.write(nodeVersion)
+            </script>
+        </p>
+        <p>Chrome: <script>
+                document.write(chromeVersion)
+            </script>
+        </p>
+        <p>V8: <script>
+                document.write(engineVersion)
+            </script>
+        </p>
         <p>Vue: 2.6.10</p>
         <p>Materialize: 1.0.0</p>
     </div>
@@ -188,24 +215,32 @@
 <script src="./js/vue.js"></script>
 <script src="./js/materialize.js"></script>
 <script>
-    function $(query) { //Fake Jquery :D but not used often
+    function $(query) { //FUNC: Fake Jquery :D but not used often
         return document.querySelectorAll(query)
     }
+
+    //func: M.Init
     document.addEventListener('DOMContentLoaded', function () { //Modal Init
         var elems = document.querySelectorAll('.modal');
         var instances = M.Modal.init(elems, {
             dismissible: true
         });
     });
-    document.addEventListener('DOMContentLoaded', function() {  //Tooltip Init
+    document.addEventListener('DOMContentLoaded', function () { //Tooltip Init
         var elems = document.querySelectorAll('.tooltipped');
         var instances = M.Tooltip.init(elems, {
             margin: -5
         });
     });
+    var tabInstance = M.Tabs.init($('.tabs'), {
+        swipeable: false
+    }); //Tabs Init
     // const M = require('materialize-css')
 
-    // ! File OP : Start
+    /****************************************************************
+    FUNC: File OP : Start
+    */
+
     var openFile = document.getElementById('openFile')
     var saveFile = document.getElementById('saveFile')
     openFile.addEventListener('click', () => {
@@ -269,13 +304,14 @@
         })
     }) //File OP: End
 
-    var tabInstance = M.Tabs.init($('.tabs'), {
-        swipeable: false
-    }); //Tabs Init
+    //func: select textbox
     var addtext = document.getElementById('strin');
     addtext.select(); //Select input textbox for default
     var cur = -1 //Current Selected Student ID
 
+    //func: Vue init
+
+    //  func: app title
     var appTitle = new Vue({
         el: '#appTitle',
         data: {
@@ -314,7 +350,7 @@
             }
         }
     })
-    var addsec = new Vue({ //ADD area
+    var addsec = new Vue({ //func: ADD area
         el: '#addform',
         methods: {
             addtrig: function () {
@@ -385,7 +421,7 @@
         }
     })
 
-    function clr() { //Clear it
+    function clr() { //func: Clear it
         console.log(stulist)
         var stulistLen = stulist.data.length
         for (let delPointer = stulistLen - 1; delPointer >= 0; delPointer--) {
@@ -404,11 +440,11 @@
 
     }
 
-    function sleep(callback, seconds) { //UNUSED
+    function sleep(callback, seconds) { //UNUSED:
         let waitLength = window.setTimeout(callback, seconds)
     }
     var temptimer = null
-    var randmodal = new Vue({ //Selection Tab Controller
+    var randmodal = new Vue({ //func: Selection Tab Controller
         el: '#select',
         data: {
             text: "点击来开始点名",
@@ -445,8 +481,8 @@
                 this.text = '敬请期待';
                 this.id = null
             },
-            stop: function(){
-                this.totalref=0
+            stop: function () {
+                this.totalref = 0
             },
             dice: function () {
                 if (stulist.data.length <= 1) {
@@ -470,17 +506,17 @@
                     this.shuffle()
                 }
             },
-            inf: function(){
-                if(stulist.data.length <= 1){
+            inf: function () {
+                if (stulist.data.length <= 1) {
                     this.text = "请添加更多的学生"
-                }else{
+                } else {
                     this.totalref = Infinity
                     this.shuffle()
                 }
             }
         }
     })
-    document.getElementsByClassName('indicator')[0].classList.add('white') //Paint the indicator
+    document.getElementsByClassName('indicator')[0].classList.add('white') //func:Paint the indicator
 </script>
 
 
