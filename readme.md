@@ -2,7 +2,7 @@
 
 ![点名系统海报](点名海报.png)
 
-使用 node.js, Electron 构建的网页应用。
+使用 node.js + Electron 构建的应用。UI基于原来的[StudentSelector](https://github.com/pkuschool/StudentSelector)
 
 ## 功能
 
