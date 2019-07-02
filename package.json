@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -wl"
+    "dist": "electron-builder"
   },
   "author": "Smallg0at",
   "license": "MIT",

@@ -40,3 +40,18 @@ npm run start
 ```
 
 或者，Windows 用户也可以直接运行```run.vbs```
+
+## 打包
+
+### 安装程序
+
+```bash
+npm run dist
+```
+
+
+### 就是文件夹
+
+```bash
+npm run pack
+```
