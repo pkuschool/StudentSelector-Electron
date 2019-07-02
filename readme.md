@@ -34,10 +34,9 @@ electron_mirror=https://npm.taobao.org/mirrors/electron/
 
 ## 运行
 
-为了符合拼写特点故意构造的奇葩命令
 
 ```bash
-npm run it
+npm run start
 ```
 
 或者，Windows 用户也可以直接运行```run.vbs```

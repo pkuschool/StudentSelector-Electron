@@ -4,16 +4,69 @@
   "description": "Student-Selector Electron Edition",
   "main": "main.js",
   "scripts": {
-    "it": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -wl"
   },
   "author": "Smallg0at",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^5.0.1"
+    "electron": "^5.0.6",
+    "electron-builder": "^20.44.4"
   },
   "dependencies": {
     "electron-store": "^3.2.0",
     "fs": "0.0.1-security",
     "node-xlsx": "^0.15.0"
+  },
+  "build": {
+    "productName": "点名系统",
+    "appId": "com.smallg0at.stuselect",
+    "copyright": "YC L",
+    "directories": {
+      "output": "build"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": false,
+      "installerHeaderIcon": "./build/icons/win.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "点名系统"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "build/icons/macos.icns"
+    },
+    "win": {
+      "icon": "build/icons/win.ico",
+      "target": [
+        {
+          "target": ["nsis", "zip"],
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "build/icons/StudentSelector.png",
+      "target": ["deb", "zip"]
+    }
   }
 }

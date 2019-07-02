@@ -23,7 +23,7 @@ function createWindow() {
       nodeIntegration: true
     },
     center: true,
-    icon: './layout/attr/favicon.ico',
+    icon: './layout/attr/win.ico',
     acceptFirstMouse:true,
     backgroundColor: '#00FFFFFF'
   })
