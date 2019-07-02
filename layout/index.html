@@ -38,7 +38,7 @@
         const engineVersion = process.version.v8
         const chromeVersion = process.versions.chrome
         const electronVersion = process.versions.electron
-        const appVersion = '0.4.0'
+        const appVersion = '0.5.0'
     </script>
     <!-- <link href="https://cdn.bootcss.com/material-design-icons/3.0.1/iconfont/material-icons.min.css" rel="stylesheet"> -->
 
@@ -60,9 +60,9 @@
                         data-position="bottom" data-tooltip="保存">
                         <i class="material-icons topbtn teal-hover color-transition">save</i>
                     </a>
-                    <a class="white-text not-draggable modal-trigger tooltipped" title="关于" href="#aboutModal"
-                        data-position="bottom" data-tooltip="关于">
-                        <i class="material-icons topbtn teal-hover color-transition">info</i>
+                    <a class="white-text not-draggable modal-trigger tooltipped" title="设置" href="#aboutModal"
+                        data-position="bottom" data-tooltip="设置">
+                        <i class="material-icons topbtn teal-hover color-transition">settings</i>
                     </a>
                     <a class="white-text not-draggable modal-trigger tooltipped" title="清空" href="#clrModal"
                         data-position="bottom" data-tooltip="清空">
@@ -167,7 +167,7 @@
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">取消</a>
     </div>
 </div>
-<div id="aboutModal" class="modal">
+<div id="aboutModal" class="modal modal-fixed-footer">
     <!-- Func: aboutModal -->
     <div class="modal-content">
         <h4>设置</h4>
@@ -177,13 +177,12 @@
             <a class="btn-small" v-on:click="lenShift(0.1)">+</a>
             <a class="btn-small" v-on:click="lenShift(-0.1)">-</a>
         </p>
-        <div class="divider" style="margin-top: 10px !important"></div>
+        <div class="divider" style="margin-top: 10px !important;margin-bottom: 10px !important"></div>
         <h4>关于 点名系统Plus</h4>
         <p>@地铁狂羊，2019</p>
         <a href="https://github.com/pkuschool/StudentSelector-Electron" class="btn-small">GitHub</a>
         <a href="https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE" class="btn-small">许可</a>
 
-        <div class="divider" style="margin-top: 10px !important"></div>
         <p>版本：<script>
                 document.write(appVersion)
             </script>
