@@ -1,6 +1,4 @@
 {
-    "code-runner.clearPreviousOutput": true,
-    "code-runner.customCommand": "electron .",
     "eslint.validate": [
         "javascript",
         "javascriptreact",

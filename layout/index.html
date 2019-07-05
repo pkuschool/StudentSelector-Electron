@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>管理 | 点名系统</title>
+    <!-- <title>点名系统: 未命名班级</title> -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./css/main.css">
     <script>
@@ -20,6 +20,9 @@
         // const vue = new Vue
         var ipc = require('electron').ipcRenderer; // For Window Control purposes
         const fs = require('fs') // Read JSON!
+        function setDocTitle(className = stulist.class) {
+            document.title = "点名系统 - " + className
+        }
         var stulist = { //Default Option; Introduction to new user
             class: "未命名班级",
             data: [{
@@ -34,6 +37,8 @@
                 }
             ] //default config
         }
+        setDocTitle(stulist.class)
+
         //func: vercode detect
         const nodeVersion = process.versions.node
         const engineVersion = process.version.v8
@@ -265,6 +270,7 @@
                         stulist = JSON.parse(data)
                         students.list = stulist.data
                         appTitle.className = stulist.class
+                        setDocTitle(stulist.class)
                         randmodal.revert()
                         M.toast({
                             html: '打开成功'
@@ -292,6 +298,7 @@
                 let dir = callback.split(new RegExp(/\\/))
                 dir = dir[dir.length - 1].split('.')
                 stulist.class = dir[0]
+                setDocTitle(dir[0])
                 console.log("Saving to: " + callback)
                 fs.writeFile(callback, JSON.stringify(stulist), (err) => {
                     if (err) {
