@@ -69,3 +69,7 @@
 .teal-hover:hover{
     color: #72d4cb
 }
+
+.hide-when-not-ready{
+    display: none !important;
+}
