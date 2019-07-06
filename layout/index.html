@@ -45,7 +45,7 @@
 
 </head>
 
-<body class="white-on-small" style=" font-family: '思源黑体', 'PingFang SC', 'Segoe UI';height: 100%">
+<body class="white-on-small" style=" font-family: '思源黑体', 'PingFang SC', 'Microsoft Yahei UI', sans-serif;height: 100%">
     <div class="centwindow">
         <ul class="collection with-header z-depth-0" style="padding: 0px 0px;">
             <li class="collection-header teal white-text row z-depth-2 draggable" style="padding-top: 5px;margin-top: 0px;margin-bottom: 0;border-bottom: 0px
@@ -194,18 +194,20 @@
             <h5>点名时长</h5>
             <p>值越大，点名时间越长。</p>
             <p>目前值：{{ len }}&nbsp;&nbsp;
-                <a class="btn-small" v-on:click="lenShift(0.1)">+</a>
-                <a class="btn-small" v-on:click="lenShift(-0.1)">-</a>
+                <a class="btn-small" v-on:click="lenShift(0.1)"><i class="material-icons">arrow_upward</i></a>
+                <a class="btn-small" v-on:click="lenShift(-0.1)"><i class="material-icons">arrow_downward</i></a>
             </p>
             <h5>清空</h5>
-            <p>⚠此操作将清空您的班级列表。</p>
-            <a class="white-text not-draggable modal-trigger red btn" title="清空" href="#clrModal" >清空
+            <p>⚠此操作将清空您的班级。</p>
+            <a class="white-text not-draggable modal-trigger red btn" title="清空" href="#clrModal" >
+                <i class="material-icons left">delete_sweep</i>
+                清空
             </a><span class="hide green-text text-darken-2" id="clrNotifier" style="margin-left: 5px"><i class="material-icons">check</i>清空完毕</span>
         </div>
         <div id="about" class="col s6" style="border-left: dotted 0.5px lightgrey">
             <h4>关于 点名系统Plus</h4>
             <p>@地铁狂羊，2019</p>
-            <a class="btn-small"
+            <a class="btn-small black"
                 onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron')">GitHub</a>
             <a class="btn-small"
                 onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE')">许可</a>
