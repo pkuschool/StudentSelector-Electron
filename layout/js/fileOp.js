@@ -1,5 +1,5 @@
 const fs = require('fs') // Read JSON!
-const dialog = require('electron').remote
+const {dialog} = require('electron').remote
 
 function openJSON() {
     let filepaths = dialog.showOpenDialog({
