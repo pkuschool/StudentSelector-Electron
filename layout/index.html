@@ -65,10 +65,6 @@
                         data-position="bottom" data-tooltip="设置">
                         <i class="material-icons topbtn teal-hover color-transition">settings</i>
                     </a>
-                    <a class="white-text not-draggable modal-trigger tooltipped" title="清空" href="#clrModal"
-                        data-position="bottom" data-tooltip="清空">
-                        <i class="material-icons topbtn delbtn color-transition">delete_sweep</i>
-                    </a>
                     <a class="white-text not-draggable" onclick='ipc.send("window-min");return false;' title="最小化"
                         href="#">
                         <i class="material-icons topbtn color-transition teal-hover">remove</i>
@@ -88,7 +84,7 @@
             <li class="collection-item teal" style="padding-top:0px;padding-bottom: 1px;border-bottom: 0px transparent">
                 <div class="row white-text teal" style="margin-bottom: 0px">
                     <div class="col s12 teal">
-                        <ul class="tabs teal">
+                        <ul class="tabs teal" id="mainTab">
                             <li class="tab col s3 white-text"><a href="#manage" class="active white-text">管理</a></li>
                             <li class="tab col s3 white-text"><a href="#select" class="white-text">点名</a></li>
                             <li class="tab col s3 white-text"><a href="#timer" class="white-text">计时</a></li>
@@ -192,34 +188,41 @@
 </div>
 <div id="aboutModal" class="modal modal-fixed-footer">
     <!-- Func: aboutModal -->
-    <div class="modal-content">
-        <h4>设置</h4>
-        <h5>点名时长</h5>
-        <p>值越大，点名时间越长。</p>
-        <p>目前值：{{ len }}&nbsp;&nbsp;
-            <a class="btn-small" v-on:click="lenShift(0.1)">+</a>
-            <a class="btn-small" v-on:click="lenShift(-0.1)">-</a>
-        </p>
-        <div class="divider" style="margin-top: 10px !important;margin-bottom: 10px !important"></div>
-        <h4>关于 点名系统Plus</h4>
-        <p>@地铁狂羊，2019</p>
-        <a class="btn-small"
-            onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron')">GitHub</a>
-        <a class="btn-small"
-            onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE')">许可</a>
+    <div class="modal-content row">
+        <div id="settings" class="col s6">
+            <h4>设置</h4>
+            <h5>点名时长</h5>
+            <p>值越大，点名时间越长。</p>
+            <p>目前值：{{ len }}&nbsp;&nbsp;
+                <a class="btn-small" v-on:click="lenShift(0.1)">+</a>
+                <a class="btn-small" v-on:click="lenShift(-0.1)">-</a>
+            </p>
+            <h5>清空</h5>
+            <p>⚠此操作将清空您的班级列表。</p>
+            <a class="white-text not-draggable modal-trigger red btn" title="清空" href="#clrModal" >清空
+            </a><span class="hide green-text text-darken-2" id="clrNotifier" style="margin-left: 5px"><i class="material-icons">check</i>清空完毕</span>
+        </div>
+        <div id="about" class="col s6" style="border-left: dotted 0.5px lightgrey">
+            <h4>关于 点名系统Plus</h4>
+            <p>@地铁狂羊，2019</p>
+            <a class="btn-small"
+                onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron')">GitHub</a>
+            <a class="btn-small"
+                onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE')">许可</a>
 
-        <p>版本：{{appV}}
-        </p>
-        <p>Electron: {{vercode.electron}}
-        </p>
-        <p>Node.js: {{vercode.node}}
-        </p>
-        <p>Chrome:{{vercode.chrome}}
-        </p>
-        <p>V8:{{vercode.v8}}
-        </p>
-        <p>Vue: 2.6.10</p>
-        <p>Materialize: 1.0.0</p>
+            <p>版本：{{appV}}
+            </p>
+            <p>Electron: {{vercode.electron}}
+            </p>
+            <p>Node.js: {{vercode.node}}
+            </p>
+            <p>Chrome: {{vercode.chrome}}
+            </p>
+            <p>V8: {{vercode.v8}}
+            </p>
+            <p>Vue.js: 2.6.10</p>
+            <p>Materialize: 1.0.0</p>
+        </div>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">确定</a>
@@ -384,20 +387,23 @@
     })
 
     function clr() { //func: Clear it
-        console.log(stulist)
         var stulistLen = stulist.data.length
         for (let delPointer = stulistLen - 1; delPointer >= 0; delPointer--) {
-            const element = stulist[delPointer];
+            const element = stulist.data[delPointer];
             console.log("Deleting: #" + delPointer)
             if (!element.sticky) {
                 stulist.data.splice(delPointer, 1)
             }
         }
-        M.Toast.dismissAll();
-        M.toast({
-            html: '清空完毕',
-            classes: 'red white-text'
-        })
+        // M.Toast.dismissAll();
+        // M.toast({
+        //     html: '清空完毕',
+        //     classes: 'red white-text'
+        // })
+        document.querySelector('#clrNotifier').classList.remove('hide')
+        setTimeout(function(){
+            document.querySelector('#clrNotifier').classList.add('hide')
+        },3000)
 
 
     }
@@ -479,6 +485,7 @@
         }
     })
     document.getElementsByClassName('indicator')[0].classList.add('white') //func:Paint the indicator
+    // document.getElementsByClassName('indicator')[1].classList.add('teal')
     document.querySelectorAll('.hide-when-not-ready').forEach(function(item, index){
         item.classList.remove('hide-when-not-ready')
     })

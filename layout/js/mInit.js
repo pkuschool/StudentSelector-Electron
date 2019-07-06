@@ -14,7 +14,11 @@ document.addEventListener('DOMContentLoaded', function () { //Tooltip Init
         margin: -5
     });
 });
-var tabInstance = M.Tabs.init($('.tabs'), {
+var aboutTab = M.Tabs.init($('#aboutTab'), {
     swipeable: false
-}); //Tabs Init
+});
+var mainTab = M.Tabs.init($('#mainTab'), {
+    swipeable: false
+});
+//Tabs Init
 // const M = require('materialize-css')
