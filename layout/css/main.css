@@ -5,15 +5,17 @@
 
 .topbtn {
     margin-top: 5px;
-    padding-left: 5px;
+    padding-left: 0px;
     font-size: 28px !important;
 }
 
 .color-transition {
-    transition: color 0.5s !important;
-    transition: background-color 0.5s !important
+    transition: color 0.25s !important;
+    transition: background-color 0.25s !important
 }
-
+.transition{
+    transition: 0.25s
+}
 .delbtn:hover {
 
     color: #ff8800;
@@ -27,7 +29,13 @@
 .selectbtn:hover {
     color: rgb(0, 191, 255);
 }
-
+.closebtn{
+    padding-left: 0;
+}
+.closebtn:hover{
+    background-color: red;
+    border-radius: 3px;
+}
 
 .centwindow {
     width: 100%;
@@ -72,4 +80,16 @@
 
 .hide-when-not-ready{
     display: none !important;
+}
+
+.no-select{
+    user-select: none;
+}
+
+.looks-clickable{
+    cursor: pointer;
+}
+
+.looks-disabled{
+    cursor: not-allowed;
 }

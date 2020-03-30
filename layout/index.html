@@ -27,12 +27,14 @@
             data: [{
                     name: "欢迎，",
                     id: 0,
-                    sticky: false
+                    sticky: false,
+                    onSelect: true
                 },
                 {
                     name: "感谢使用点名系统！",
                     id: 1,
-                    sticky: false
+                    sticky: false,
+                    onSelect: false
                 }
             ] //default config
         }
@@ -50,32 +52,25 @@
         <ul class="collection with-header z-depth-0" style="padding: 0px 0px;">
             <li class="collection-header teal white-text row z-depth-2 draggable" style="padding-top: 5px;margin-top: 0px;margin-bottom: 0;border-bottom: 0px
                 transparent;">
-                <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col"
-                    id="appTitle">点名系统 Plus<span class=" hide-when-not-ready"> ({{className}})</span></p>
+                <p style="font-size: 24px;margin-top: 5px;margin-bottom: 5px;font-weight: 350;" class="col" id="appTitle">点名系统 Plus<span class=" hide-when-not-ready"> ({{className}})</span></p>
                 <div class="right topbtn">
-                    <a class="white-text not-draggable tooltipped" title="打开" onclick="return true" id="openFile"
-                        data-position="bottom" data-tooltip="打开">
-                        <i class="material-icons topbtn teal-hover color-transition">folder_open</i>
+                    <a class="white-text not-draggable tooltipped no-select" title="打开" onclick="return true" id="openFile" data-position="bottom" data-tooltip="打开">
+                        <i class="material-icons topbtn teal-hover color-transition looks-clickable">folder_open</i>
                     </a>
-                    <a class="white-text not-draggable tooltipped" title="保存" onclick="return true" id="saveFile"
-                        data-position="bottom" data-tooltip="保存">
-                        <i class="material-icons topbtn teal-hover color-transition">save</i>
+                    <a class="white-text not-draggable tooltipped no-select" title="保存" onclick="return true" id="saveFile" data-position="bottom" data-tooltip="保存">
+                        <i class="material-icons topbtn teal-hover color-transition looks-clickable">save</i>
                     </a>
-                    <a class="white-text not-draggable modal-trigger tooltipped" title="设置" href="#aboutModal"
-                        data-position="bottom" data-tooltip="设置">
-                        <i class="material-icons topbtn teal-hover color-transition">settings</i>
+                    <a class="white-text not-draggable modal-trigger tooltipped no-select" title="设置" href="#aboutModal" data-position="bottom" data-tooltip="设置">
+                        <i class="material-icons topbtn teal-hover color-transition looks-clickable">settings</i>
                     </a>
-                    <a class="white-text not-draggable" onclick='ipc.send("window-min");return false;' title="最小化"
-                        href="#">
-                        <i class="material-icons topbtn color-transition teal-hover">remove</i>
+                    <a class="white-text not-draggable no-select" onclick='ipc.send("window-min");return false;' title="最小化" href="#">
+                        <i class="material-icons topbtn color-transition teal-hover no-select looks-clickable">remove</i>
                     </a>
-                    <a class="white-text not-draggable" onclick='ipc.send("window-max");return false;' title="最大化"
-                        href="#">
-                        <i class="material-icons topbtn color-transition teal-hover">crop_square</i>
+                    <a class="white-text not-draggable no-select" onclick='ipc.send("window-max");return false;' title="最大化" href="#">
+                        <i class="material-icons topbtn color-transition teal-hover no-select looks-clickable">crop_square</i>
                     </a>
-                    <a class="white-text not-draggable rounded " onclick='ipc.send("window-close");return false;'
-                        title="关闭" href="#">
-                        <i class="material-icons topbtn color-transition red-hover">clear</i>
+                    <a class="white-text not-draggable rounded no-select" onclick='ipc.send("window-close");return false;' title="关闭" href="#">
+                        <i class="material-icons topbtn transition closebtn looks-clickable">clear</i>
                     </a>
                 </div>
                 <!-- <button class="btn col s1 blue white-text z-depth-1 waves-light waves-effect topbtn"></button>
@@ -97,10 +92,8 @@
                 <div id="manage">
                     <li class="collection-item">
                         <div class="row" style="margin-bottom: 0px;" id="addform">
-                            <input type="text" id="strin" class="validate col s10" placeholder="姓名学号，以 ' | ' 分隔"
-                                value="">
-                            <button type="button" class="btn col s2" style="height: 3rem;" id="addbtn"
-                                v-on:click="addtrig">添加</button>
+                            <input type="text" id="strin" class="validate col s10" placeholder="姓名学号，以 ' | ' 分隔" value="">
+                            <button type="button" class="btn col s2" style="height: 3rem;" id="addbtn" v-on:click="addtrig">添加</button>
                             </form>
                         </div>
 
@@ -112,11 +105,12 @@
                         <li class="collection-item" v-for="(student,index) in list" v-if="ref">
                             <div>{{ student.name }}
                                 <div class="right">
-                                    <span style="margin-right:5px; font-size: 18px">{{student.id}}</span>
-                                    <a class="secondary-content">
-                                        <i class="material-icons delbtn dred color-transition" v-if="!student.sticky"
-                                            v-on:click="del(index, true)">delete</i>
-                                        <i class="material-icons disabled" v-if="student.sticky">delete</i>
+                                    <span style="margin-right:8px; font-size: 18px">{{student.id}}</span>
+                                    <a class="secondary-content no-select">
+                                        <!-- <i class="material-icons looks-clickable" style="margin-right: 3px" v-if="!student.onSelect" v:on:click="toggle(index)">check_box_outline_blank</i> -->
+                                        <i class="material-icons looks-clickable" style="margin-right: 3px" v-on:click="toggle(index)">{{(student.onSelect)?'check_box':'check_box_outline_blank'}}</i>
+                                        <i class="material-icons delbtn dred color-transition looks-clickable" v-if="!student.sticky" v-on:click="del(index, true)" title="删除此学生">delete</i>
+                                        <i class="material-icons disabled looks-disabled" v-if="student.sticky">delete</i>
                                     </a>
                                 </div>
                             </div>
@@ -127,26 +121,13 @@
                 <div id="select" style="position: fixed;top: 111px;bottom: 0px;width: 100%;overflow: auto">
                     <!-- func: The Selector Tab -->
                     <div class="center-align teal" style="height: 100% !important;">
-                        <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple"
-                            style="width: 85%;margin-top: 5%;margin-bottom: 5%" v-on:click="dice"
-                            v-on:dblclick="dblclick">
+                        <div class=" card-panel teal lighten-3 hoverable waves-effect waves-ripple" style="width: 85%;margin-top: 5%;margin-bottom: 5%" v-on:mousedown="shuffleStarter()" v-on:mouseup="shuffleEnder()">
                             <p class="black-text" style="font-size: 75px;">{{text}}</p>
-                            <p style="font-size: 25px">{{ id }}</p>
+                            <p style="font-size: 25px">{{ id || '-' }}</p>
                         </div><br>
-                        <a class="btn white black-text" v-on:click="inf" v-if="totalref == 0">保持</a>
+                        <!-- <a class="btn white black-text" v-on:click="inf" v-if="totalref == 0">保持</a> -->
                         <a class="btn white black-text" v-on:click="revert">复原</a>
-                        <a class="btn white red-text" v-if="totalref > 0" v-on:click="stop">停止</a>
-                        <div class="progress white" style="width: 15%;margin: 0 auto;margin-top: 1em">
-                            <div class="indeterminate black" v-show="totalref > 0"></div>
-                        </div>
-                        <p v-if="totalref > 0 && totalref != Infinity" class="white-text">
-                            {{ 100-Math.floor(totalref/originref*100) }}%</p>
-                        <p v-if="totalref == Infinity" class="white-text">正在保持中，按“复原”以取消，“停止”以立刻选择</p>
-                        <p v-if="totalref > 30000 && totalref <= 60000 && totalref != Infinity" class=" white-text">
-                            可能会花费较长时间，如需要取消请按上方“复原”。</p>
-                        <p v-if="totalref > 60000 && totalref != Infinity" class=" white-text">不要瞎玩啦，如需要复原请按上方“复原”。</p>
-
-                        <p v-if="totalref <= 0" class=" white-text">准备就绪</p>
+                        <a class="btn white black-text" v-on:click="record" v-if="triggered">{{(studentList[now].onSelect)?'取消选择':'标为选中'}}</a>
                     </div>
                 </div>
                 <!-- Func: Timer. TODO: Basic systems -->
@@ -155,20 +136,20 @@
                 </div>
             </main>
             <div class="hide-when-ready center-align centered" style="width: 100%;margin-top: 10%">
-                  <div class="preloader-wrapper big active">
-                      <div class="spinner-layer spinner-green-only">
-                          <div class="circle-clipper left">
-                              <div class="circle"></div>
-                          </div>
-                          <div class="gap-patch">
-                              <div class="circle"></div>
-                          </div>
-                          <div class="circle-clipper right">
-                              <div class="circle"></div>
-                          </div>
-                      </div>
-                  </div>
-                  <p style="font-size: 30px">⏳ 正在加载...</p>
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-green-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="gap-patch">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <p style="font-size: 30px">⏳ 正在加载...</p>
             </div>
         </ul>
 
@@ -189,17 +170,17 @@
 <div id="aboutModal" class="modal modal-fixed-footer">
     <!-- Func: aboutModal -->
     <div class="modal-content row">
-        <div id="settings" class="col s6">
+        <div id="settings" class="col s6 no-select">
             <h4>设置</h4>
             <h5>点名时长</h5>
             <p>值越大，点名时间越长。</p>
             <p>目前值：{{ len }}&nbsp;&nbsp;
-                <a class="btn-small" v-on:click="lenShift(0.1)"><i class="material-icons">arrow_upward</i></a>
-                <a class="btn-small" v-on:click="lenShift(-0.1)"><i class="material-icons">arrow_downward</i></a>
+                <a class="btn-small no-select" v-on:click="lenShift(0.1)"><i class="material-icons">arrow_upward</i></a>
+                <a class="btn-small no-select" v-on:click="lenShift(-0.1)"><i class="material-icons">arrow_downward</i></a>
             </p>
             <h5>清空</h5>
             <p>⚠此操作将清空您的班级。</p>
-            <a class="white-text not-draggable modal-trigger red btn" title="清空" href="#clrModal" >
+            <a class="white-text not-draggable modal-trigger red btn" title="清空" href="#clrModal">
                 <i class="material-icons left">delete_sweep</i>
                 清空
             </a><span class="hide green-text text-darken-2" id="clrNotifier" style="margin-left: 5px"><i class="material-icons">check</i>清空完毕</span>
@@ -207,10 +188,8 @@
         <div id="about" class="col s6" style="border-left: dotted 0.5px lightgrey">
             <h4>关于 点名系统Plus</h4>
             <p>@地铁狂羊，2019</p>
-            <a class="btn-small black"
-                onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron')">GitHub</a>
-            <a class="btn-small"
-                onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE')">许可</a>
+            <a class="btn-small black" onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron')">GitHub</a>
+            <a class="btn-small" onclick="shell.openExternal('https://github.com/pkuschool/StudentSelector-Electron/blob/master/LICENSE')">许可</a>
 
             <p>版本：{{appV}}
             </p>
@@ -270,8 +249,8 @@
             appV: appVersion
         },
         methods: {
-            lenShift: function (elevation) {
-                if(parseFloat(this.len) + parseFloat(elevation) >= 0.3 && parseFloat(this.len) + parseFloat(elevation) <= 3){
+            lenShift: function(elevation) {
+                if (parseFloat(this.len) + parseFloat(elevation) >= 0.3 && parseFloat(this.len) + parseFloat(elevation) <= 3) {
                     this.len = (parseFloat(this.len) + parseFloat(elevation)).toFixed(1)
                     store.set('lenMutiplier', this.len)
                 }
@@ -292,7 +271,7 @@
             ref: true
         },
         methods: {
-            del: function (index, ifconfirm) { //Delete STUDENT w/ index
+            del: function(index, ifconfirm) { //Delete STUDENT w/ index
                 let tempdel = stulist.data[index].name
                 let delres = true /* false */ //Disabled Del Protection
                 // if (ifconfirm) {
@@ -309,21 +288,32 @@
                 }
 
             },
-            upd: function () { //UNUSED
+            toggle: function(index) {
+                stulist.data[index].onSelect = !stulist.data[index].onSelect
+            },
+            upd: function() { //UNUSED
                 this.ref = false
                 this.$nextTick(() => {
                     this.ref = true
                 })
+            },
+            filterSelectable(student) {
+                return !student.onSelect
+            }
+        },
+        computed: {
+            selectable: function() {
+                return stulist.data.filter(this.filterSelectable)
             }
         }
     })
     var addsec = new Vue({ //func: ADD area
         el: '#addform',
         methods: {
-            addtrig: function () {
+            addtrig: function() {
                 this.add(document.getElementById('strin').value)
             },
-            add: function (addstr) {
+            add: function(addstr) {
                 /* Violent Add Controls by directly looking in DOM */
                 var tempstr = ""
                 tempstr = addstr
@@ -331,17 +321,18 @@
                     console.log("Adding w/ string: " + tempstr)
 
                     var addarray = tempstr.split('&')
-                    addarray.forEach(function (item, index) {
+                    addarray.forEach(function(item, index) {
                         var tempadd = {
                             name: "",
                             id: null,
-                            sticky: false
+                            sticky: false,
+                            onSelect: false
                         }
                         var addArrTemp = item.split('|')
                         addArrTemp[0] = addArrTemp[0].trim()
                         // addArrTemp[1] = addArrTemp[1].trim()
                         var pass = true
-                        stulist.data.forEach(function (item, index) {
+                        stulist.data.forEach(function(item, index) {
                             if (item.name == addArrTemp[0] || (item.id == addArrTemp[1] &&
                                     addArrTemp[1])) {
                                 pass = false;
@@ -403,9 +394,9 @@
         //     classes: 'red white-text'
         // })
         document.querySelector('#clrNotifier').classList.remove('hide')
-        setTimeout(function(){
+        setTimeout(function() {
             document.querySelector('#clrNotifier').classList.add('hide')
-        },3000)
+        }, 3000)
 
 
     }
@@ -419,79 +410,77 @@
         data: {
             text: "点击来开始点名",
             id: null,
-            totalref: 0,
-            addLength: 0,
-            originref: 0
+            selecting: false,
+            now: 0,
+            last: null,
+            triggered: false
         },
         methods: {
-            shuffle: function () {
-                temptimer = window.setInterval(function () {
-                    if (randmodal.totalref > 0) {
-                        // console.log("Shuffle @ " + randmodal.totalref)
-                        if (stulist.data.length == 1) {
-                            randmodal.text = "请添加更多的学生"
-                        } else {
-                            var randval = Math.floor(Math.random() * stulist.data.length)
-                            while (randval == cur) {
-                                randval = Math.floor(Math.random() * stulist.data.length)
+            shuffleStarter: function() {
+                if(students.selectable.length > 1){
+                    this.selecting = true
+                    this.last = this.now
+                    this.now = Math.floor(Math.random() * students.selectable.length)
+                    this.triggered = true;
+
+                    window.setInterval(function() {
+                        if(randmodal.selecting){
+                            randmodal.now = randmodal.now+1
+                            if (randmodal.now >= students.selectable.length) {
+                                randmodal.now = 0
                             }
-                            cur = randval
-                            randmodal.text = stulist.data[randval].name
-                            randmodal.id = stulist.data[randval].id
+                            // console.log(this.now)
+                            randmodal.text = students.selectable[randmodal.now].name
+                            randmodal.id = students.selectable[randmodal.now].id
                         }
-                        randmodal.totalref -= 1
-                    } else {
-                        temptimer = window.clearInterval()
-                    }
-                }, 1)
+                    }, 25)
+                }else{
+                    M.toast({
+                        html: '需要更多没点过的学生才能开始点名。'
+                    })
+                }
 
             },
-            revert: function () {
-                this.totalref = 0
+            shuffleEnder: function() {
+
+                window.clearInterval()
+                if(this.selecting){
+                    this.now = Math.floor(Math.random() * students.selectable.length)
+                    while (this.last == this.now) {
+                        this.now = Math.floor(Math.random() * students.selectable.length)
+
+                    }
+                    this.text = stulist.data[this.now].name
+                    this.id = stulist.data[this.now].id
+                    this.selecting = false
+                }
+                window.clearInterval()
+            },
+            revert: function() {
+                // this.totalref = 0
                 this.text = '敬请期待';
                 this.id = null
+                this.triggered = false
             },
-            stop: function () {
-                this.totalref = 0
+            stop: function() {
+                // this.totalref = 0
             },
-            dice: function () {
-                if (stulist.data.length <= 1) {
-                    this.text = "请添加更多的学生"
-                } else {
-                    this.totalref += Math.floor(aboutModal.len * (Math.random() * 200 + 350 + this.addLength))
-                    if (this.addLength <= 4000) {
-                        this.addLength += 170
-                    }
-                    this.originref = this.totalref
-                    this.shuffle()
-                }
-
-            },
-            dblclick: function () { //Easter Egg!
-                if (stulist.data.length <= 1) {
-                    this.text = "请添加更多的学生"
-                } else {
-                    this.totalref += 8000 * aboutModal.len
-                    this.originref = this.totalref
-                    this.shuffle()
-                }
-            },
-            inf: function () {
-                if (stulist.data.length <= 1) {
-                    this.text = "请添加更多的学生"
-                } else {
-                    this.totalref = Infinity
-                    this.shuffle()
-                }
+            record: function() {
+                stulist.data[this.id].onSelect = !stulist.data[this.id].onSelect
+            }
+        },
+        computed: {
+            studentList: function(){
+                return stulist.data;
             }
         }
     })
     document.getElementsByClassName('indicator')[0].classList.add('white') //func:Paint the indicator
     // document.getElementsByClassName('indicator')[1].classList.add('teal')
-    document.querySelectorAll('.hide-when-not-ready').forEach(function(item, index){
+    document.querySelectorAll('.hide-when-not-ready').forEach(function(item, index) {
         item.classList.remove('hide-when-not-ready')
     })
-    document.querySelectorAll('.hide-when-ready').forEach(function(item, index){
+    document.querySelectorAll('.hide-when-ready').forEach(function(item, index) {
         item.classList.add('hide')
     })
 </script>
